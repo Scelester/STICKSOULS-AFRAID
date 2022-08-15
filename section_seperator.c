@@ -1,6 +1,10 @@
 #include "raylib.h"
 
 
+
+
+
+
 void display_text_centered(char* text,int font_size,int vertical_offset,int WIDTH){
     char* Dtext = text;
 
@@ -14,7 +18,10 @@ void display_text_centered(char* text,int font_size,int vertical_offset,int WIDT
 }
 
 
-void show_starting_window(int WIDTH, int HEIGHT){
+
+
+
+void Testing_window(int WIDTH, int HEIGHT){
     
     display_text_centered("StickSouls: AFRAID",20,200,WIDTH);
 
