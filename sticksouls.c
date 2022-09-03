@@ -6,9 +6,11 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <string.h>
+#include <math.h>
 
 #include "section_seperator.c"
 #include "basic_frame.c"
+#include "shitload_of_func.c"
 
 char background_musics[10][100]; 
 int dirlooper = 0;
@@ -84,6 +86,8 @@ int main(int argc, char **argv[])
     SetTargetFPS(90);               // Set our game to run at 60 frames-per-second
 
     SetExitKey(0); // overide exit key "ESC"
+    
+    
     //--------------------------------------------------------------------------------------
     
     int sectionmanager = 0;
@@ -94,6 +98,17 @@ int main(int argc, char **argv[])
     Vector2 vertix_one_of_playTrangle = {FULLSCREEN_WIDTH/3+40,200};
     Vector2 vertix_two_of_playTrangle = {FULLSCREEN_WIDTH/3+40,800};
     Vector2 vertix_three_of_playTrangle = {FULLSCREEN_WIDTH/1.5+120,500};
+
+    int center_position[2] = {
+        (vertix_one_of_playTrangle.x+vertix_two_of_playTrangle.x+vertix_three_of_playTrangle.x)/3,
+        (vertix_one_of_playTrangle.y+vertix_two_of_playTrangle.y+vertix_three_of_playTrangle.y)/3
+        };
+
+    get_each_trangle_rotation(center_position[0], center_position[1], 
+                                vertix_one_of_playTrangle.x,vertix_one_of_playTrangle.y,
+                                vertix_two_of_playTrangle.x,vertix_two_of_playTrangle.y,
+                                vertix_three_of_playTrangle.x,vertix_three_of_playTrangle.y,
+                                20);
     
     // loading screen loop
     while (!WindowShouldClose()&&sectionmanager==0)
@@ -108,6 +123,8 @@ int main(int argc, char **argv[])
 
         BeginDrawing();
 
+            DrawCircle(591,699,20,BLACK);
+
             rlPushMatrix();
 
             rlTranslatef(
@@ -116,26 +133,25 @@ int main(int argc, char **argv[])
                 0
             );
 
-            rlRotatef(rotation_angle,0,0,-1);
-
             DrawTriangle(
                         vertix_one_of_playTrangle,
                         vertix_two_of_playTrangle,
-                        vertix_three_of_playTrangle, 
+                        vertix_three_of_playTrangle,
                         BLUE
                         );
 
             rlPopMatrix();
 
-            display_text_centered("press anywhere to start the game",25,500,FULLSCREEN_WIDTH);
-
+            // display_text_centered("press anywhere to start the game",25,500,FULLSCREEN_WIDTH);
 
             regular_mainframe(FULLSCREEN_WIDTH,FULLSCREEN_HEIGHT,mousex,mousey);
 
-
-
             rotation_angle += 0.05;
-    
+
+
+
+
+
         EndDrawing();
     }
     
