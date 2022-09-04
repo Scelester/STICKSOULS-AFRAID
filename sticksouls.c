@@ -55,14 +55,17 @@ void song_randomizer(void){
 //------------------------------------------------------------------------------------
 int main(int argc, char **argv[])
 {   
+    // get random number from time
     srand ( time(NULL) );
 
+
+    // for background_music
     get_background_music_dir();
     
-
+    // set the random number
     song_randomizer();
     
-    // image and shit
+    // image icon and shit
     Image iconimage = LoadImage("assets/images/sticksouls.ico");
     SetWindowIcon(iconimage);
     
@@ -89,12 +92,14 @@ int main(int argc, char **argv[])
     
     
     //--------------------------------------------------------------------------------------
+
+
+    // section changer
     
     int sectionmanager = 0;
+    // ======================================================================================
 
-
-    float rotation_angle = 0.0f;
-
+    // shape(triangle manager)
     Vector2 vertix_one_of_playTrangle = {FULLSCREEN_WIDTH/3+40,200};
     Vector2 vertix_two_of_playTrangle = {FULLSCREEN_WIDTH/3+40,800};
     Vector2 vertix_three_of_playTrangle = {FULLSCREEN_WIDTH/1.5+120,500};
@@ -104,26 +109,22 @@ int main(int argc, char **argv[])
         (vertix_one_of_playTrangle.y+vertix_two_of_playTrangle.y+vertix_three_of_playTrangle.y)/3
         };
 
-    get_each_trangle_rotation(center_position[0], center_position[1], 
-                                vertix_one_of_playTrangle.x,vertix_one_of_playTrangle.y,
-                                vertix_two_of_playTrangle.x,vertix_two_of_playTrangle.y,
-                                vertix_three_of_playTrangle.x,vertix_three_of_playTrangle.y,
-                                20);
-    
     // loading screen loop
+
+    int trangle_time_counter = clock();
+
     while (!WindowShouldClose()&&sectionmanager==0)
     {
+        
+
         int mousex = GetMouseX();
         int mousey = GetMouseY();
-
 
         if (IsMouseButtonDown(0)||clock()>=5000000){
             sectionmanager = 1;
         }
 
         BeginDrawing();
-
-            DrawCircle(591,699,20,BLACK);
 
             rlPushMatrix();
 
@@ -142,23 +143,39 @@ int main(int argc, char **argv[])
 
             rlPopMatrix();
 
-            // display_text_centered("press anywhere to start the game",25,500,FULLSCREEN_WIDTH);
+            display_text_centered("press anywhere to start the game",25,500,FULLSCREEN_WIDTH,"black");
 
             regular_mainframe(FULLSCREEN_WIDTH,FULLSCREEN_HEIGHT,mousex,mousey);
 
-            rotation_angle += 0.05;
-
-
-
-
-
         EndDrawing();
+
+        if ((clock()-trangle_time_counter)>=500)
+        {
+            trangle_time_counter = clock();
+            float *new_trangle_pos_list = get_each_trangle_rotation(center_position[0], center_position[1], 
+                                vertix_one_of_playTrangle.x,
+                                vertix_two_of_playTrangle.x,
+                                vertix_three_of_playTrangle.x,
+                                vertix_one_of_playTrangle.y,
+                                vertix_two_of_playTrangle.y,
+                                vertix_three_of_playTrangle.y,
+                                1);
+        
+        
+        vertix_one_of_playTrangle.x = new_trangle_pos_list[0];
+        vertix_one_of_playTrangle.y = new_trangle_pos_list[1];
+        vertix_two_of_playTrangle.x = new_trangle_pos_list[2];
+        vertix_two_of_playTrangle.y = new_trangle_pos_list[3];
+        vertix_three_of_playTrangle.x = new_trangle_pos_list[4];
+        vertix_three_of_playTrangle.y = new_trangle_pos_list[5];
+        };
+
     }
     
-
+    //==========================================================================
+    
     // for audio and music
     InitAudioDevice();
-
 
     char fullpath_to_bg_music[300];
     
@@ -175,7 +192,15 @@ int main(int argc, char **argv[])
     PlaySound(music);
     
     SetMasterVolume(0.5);
+    // ====================================================================
     
+
+    // for loading images 
+
+    Image only_soul = LoadImage("assets/images/soul.gif");
+
+
+    // =====================================================================
     int loops = 0;
 
     // start game loop
@@ -191,7 +216,7 @@ int main(int argc, char **argv[])
         BeginDrawing();
             regular_mainframe(FULLSCREEN_WIDTH,FULLSCREEN_HEIGHT,mousex,mousey);
             
-            display_text_centered(actual_background_music_playing,20,0,FULLSCREEN_WIDTH);
+            display_text_centered(actual_background_music_playing,20,0,FULLSCREEN_WIDTH,"white");
 
             gamename_window(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT,loops);
 

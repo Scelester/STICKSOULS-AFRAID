@@ -2,7 +2,7 @@
 
 void regular_mainframe(int FULLSCREEN_WIDTH,int FULLSCREEN_HEIGHT,int mouse_xpos,int mouse_ypos){
 
-    ClearBackground(RAYWHITE);
+    ClearBackground(BLACK);
 
     int closerposx = FULLSCREEN_WIDTH - 20;
         //----------------------------------------------------------------------------------
@@ -19,6 +19,6 @@ void regular_mainframe(int FULLSCREEN_WIDTH,int FULLSCREEN_HEIGHT,int mouse_xpos
         }
 
 
-        DrawText("x",closerposx,0,30,BLACK);
+        DrawText("x",closerposx,0,30,WHITE);
 
 }

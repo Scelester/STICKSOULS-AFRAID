@@ -5,19 +5,19 @@
 
 struct New_points
 {
-    int x;
-    int y;
+    float x;
+    float y;
 };
 
 
-struct New_points calculate_new_points_in_circle(int center_x, int center_y,int px,int py,int angle)
+struct New_points calculate_new_points_in_circle(int center_x, int center_y,float px,float py,float angle)
 {
     float angle_to_radian = (3.14159265358979/180)*angle;
     float sinA = sin(angle_to_radian);
     float cosA = cos(angle_to_radian);
 
-    int new_x = center_x + (px-center_x)*cosA - (py-center_y)*sinA;
-    int new_y = center_y + (px-center_x)*sinA + (py-center_y)*cosA;
+    float new_x = center_x + (px-center_x)*cosA - (py-center_y)*sinA;
+    float new_y = center_y + (px-center_x)*sinA + (py-center_y)*cosA;
 
     struct New_points ret_point = {new_x, new_y}; 
 
@@ -26,22 +26,28 @@ struct New_points calculate_new_points_in_circle(int center_x, int center_y,int 
 
 
 
-int get_each_trangle_rotation(int center_x, int center_y, int p1x,int p2x,int p3x, int p1y,int p2y,int p3y,int angle)
+float * get_each_trangle_rotation(int center_x, int center_y, float p1x,float p2x,float p3x, float p1y,float p2y,float p3y,float angle)
 {
-    int new_points[10];
+    static float new_points[10];
 
-    int x_points[] = {p1x,p2x,p3x};
-    int y_points[] = {p1y,p2y,p3y};
-    
-    int int_angle = floor(angle);
+    float x_points[] = {p1x,p2x,p3x};
+    float y_points[] = {p1y,p2y,p3y};
+
+    struct New_points recieve;
+
+    int ret_pointer_sizert = 0;
 
     for (size_t i = 0; i < 3; i++)
     {
-        struct New_points recieve = calculate_new_points_in_circle(center_x, center_y, 
-                                                                    x_points[i], y_points[i],
-                                                                    int_angle);
-        printf("point x :%d ", recieve.x);
-        printf("point y : %d\n",recieve.y);
+        recieve = calculate_new_points_in_circle(center_x, center_y, 
+                                                x_points[i], y_points[i],
+                                                angle);
+
+        new_points[ret_pointer_sizert] = recieve.x;
+        new_points[ret_pointer_sizert + 1] = recieve.y; 
+
+        ret_pointer_sizert += 2;
+
     }
     
 

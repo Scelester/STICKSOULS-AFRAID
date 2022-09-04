@@ -1,8 +1,19 @@
 #include "raylib.h"
+#include <string.h>
 
 
-void display_text_centered(char* text,int font_size,int vertical_offset,int WIDTH){
+void display_text_centered(char* text,int font_size,int vertical_offset,int WIDTH,char* color){
     char* Dtext = text;
+
+    Color TextColor;
+
+    if(strcmp(color, "black") == 0)
+    {
+        TextColor = BLACK;
+    }else
+    {
+    TextColor = WHITE;
+    };
 
     // finding font width
     int Dtext_width = MeasureText(Dtext,font_size);
@@ -10,10 +21,8 @@ void display_text_centered(char* text,int font_size,int vertical_offset,int WIDT
     // for centering
     int Dtext_xoffset = WIDTH/2 - Dtext_width/2;
 
-    DrawText(Dtext, Dtext_xoffset, vertical_offset, font_size, BLACK);
+    DrawText(Dtext, Dtext_xoffset, vertical_offset, font_size, TextColor);
 }
-
-
 
 
 void gamename_window(int WIDTH, int HEIGHT,int loops){
@@ -23,6 +32,12 @@ void gamename_window(int WIDTH, int HEIGHT,int loops){
     {
         temp_height= 265 - loops;
     }
-    display_text_centered("StickSouls: AFRAID",20,temp_height,WIDTH);
+    display_text_centered("StickSouls: AFRAID",20,temp_height,WIDTH,"white");
 
+}
+
+
+int CreateButton(int posx, int posy, char* buttonshape,int width,int height)
+{   
+    return 0;
 }

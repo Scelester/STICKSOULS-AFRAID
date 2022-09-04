@@ -18,9 +18,9 @@ int * x(int x){
 
 int main(int argc, char **argv){
     
-    int *y = x(2);
+    float x = 2 - 1.1;
 
-    printf("%d\n", y[0]);
+    printf("%f\n", x);
     
     return 0;
 }
