@@ -1,15 +1,13 @@
-#include "raylib.h"
-#include "rlgl.h"
-
-#include "time.h"
+#include <dirent.h>
+#include <raylib.h>
+#include <rlgl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <dirent.h>
 #include <string.h>
-#include <math.h>
+#include <time.h>
 
-#include "section_seperator.c"
 #include "basic_frame.c"
+#include "section_seperator.c"
 #include "shitload_of_func.c"
 
 char background_musics[10][100]; 
@@ -19,8 +17,8 @@ char actual_background_music_playing[200];
 int get_background_music_dir()
 {
     DIR *d;
-    struct dirent *dir;
     char path[100]="assets/music/background_music";
+    struct dirent *dir;
     d = opendir(path);
     char full_path[1000];
     if (d)
@@ -123,6 +121,8 @@ int main(int argc, char **argv[])
         if (IsMouseButtonDown(0)||clock()>=5000000){
             sectionmanager = 1;
         }
+
+
 
         BeginDrawing();
 
