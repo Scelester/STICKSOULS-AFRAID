@@ -112,21 +112,24 @@ int main(int argc, char **argv[]) {
 
 		BeginDrawing();
 
-//		rlPushMatrix();
+		//		rlPushMatrix();
 
 		rlTranslatef(0, 0, 0);
 
 		DrawTriangle(vertix_one_of_playTrangle, vertix_two_of_playTrangle,
 				vertix_three_of_playTrangle,
-				BLUE);
+				VIOLET);
 
-//		rlPopMatrix();
+		//		rlPopMatrix();
 
 		display_text_centered("press anywhere to start the game", 25, 500,
 				FULLSCREEN_WIDTH, "black");
 
 		endload = regular_mainframe(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT, mousex,
 				mousey);
+
+		CreateButton("Host Game", 20, (int[2]){5,5}, WHITE, FULLSCREEN_WIDTH/6, FULLSCREEN_HEIGHT - 150, "reactangle", 30, 20, BLUE);
+		CreateButton("Join Game", 20, (int[2]){5,5}, WHITE, FULLSCREEN_WIDTH-400, FULLSCREEN_HEIGHT - 150, "reactangle", 30, 20, RED);
 
 		EndDrawing();
 
@@ -172,41 +175,89 @@ int main(int argc, char **argv[]) {
 
 	PlaySound(music);
 
-	SetMasterVolume(0.5);
+	SetMasterVolume(0.3);
 	// ====================================================================
 
 	// for loading images
 
 	Texture2D only_soul = LoadTexture("assets/images/soul.png");
-	Rectangle only_soul_frect = {0.0f,0.0f,(float)only_soul.width/23,(float)only_soul.height};
-
+	int number_of_soul_sprite = only_soul.width / only_soul.height; // square soul
+	float each_soul_width = only_soul.width / number_of_soul_sprite;
+	Rectangle only_soul_frect = { 0.0f, 0.0f, each_soul_width,
+			(float) only_soul.height };
+	Vector2 soul_position = { FULLSCREEN_WIDTH / 2 - (each_soul_width / 2),
+			(FULLSCREEN_HEIGHT - FULLSCREEN_HEIGHT / 4) };
 
 	int frame_counter_for_soul = 0;
-	int frame_speed_for_soul = 20;
-	int soul_image_number = 0;
+	int frame_speed_for_soul = 9;
+	int current_soul_image_number = 0;
 
+	int soul_moving_count = 0;
 
 	// =====================================================================
 	int loops = 0;
 	int endgame;
+	int actual_game_started = 0;
+
+	// get midlines startng
+	int midlines_width[] = { GetRandomValue(FULLSCREEN_WIDTH / 20,
+			FULLSCREEN_WIDTH / (10 / 4)), GetRandomValue(FULLSCREEN_WIDTH / 20,
+			FULLSCREEN_WIDTH / (10 / 4)), GetRandomValue(FULLSCREEN_WIDTH / 20,
+			FULLSCREEN_WIDTH / (10 / 4)) };
+
+	int mid_layers_xpos[3] = { 0, 0, 0 };
+
+	int mid_lines_move_speed[] = { GetRandomValue(2, 10), GetRandomValue(2, 10),
+			GetRandomValue(2, 10) };
+
+	int turn[3] = { 0, 0, 0 };
 
 
+	// top and bottom lines colors
+	Color toplinecolor = RED;
+	Color bottomlinecolor = BLUE;
 
 	// start game loop
 	while (!WindowShouldClose() && sectionmanager == 1) // Detect window close button or ESC key
 	{
 		frame_counter_for_soul++;
 
-		if (frame_counter_for_soul>=(60/frame_speed_for_soul))
-		{
+		soul_moving_count++;
+
+		if (frame_counter_for_soul >= (60 / frame_speed_for_soul)) {
 			frame_counter_for_soul = 0;
-			soul_image_number++;
+			current_soul_image_number++;
 
-			if (soul_image_number > 22) soul_image_number = 0;
+			if (current_soul_image_number > number_of_soul_sprite - 1)
+				current_soul_image_number = 0;
 
-			only_soul_frect.x = (float)soul_image_number*(float)only_soul.width/23;
-
+			only_soul_frect.x = (float) current_soul_image_number
+					* (float) only_soul.width / number_of_soul_sprite;
 		}
+
+		if (soul_moving_count >= (60 / frame_speed_for_soul)) {
+			if (IsKeyDown(87)) {
+				if (soul_position.y>-20){
+					soul_position.y -= 2;
+				}
+
+			}
+			if (IsKeyDown(83)) {
+				if (soul_position.y < FULLSCREEN_HEIGHT - only_soul.height) {
+					soul_position.y += 2;
+				}
+			}
+			if (IsKeyDown(65)) {
+				if (soul_position.x > 0) {
+					soul_position.x -= 4;
+				}
+			}
+			if (IsKeyDown(68)) {
+				if (soul_position.x < FULLSCREEN_WIDTH - each_soul_width) {
+					soul_position.x += 4;
+				}
+			};
+		};
 
 		// Update
 		//----------------------------------------------------------------------------------
@@ -214,29 +265,96 @@ int main(int argc, char **argv[]) {
 		int mousey = GetMouseY();
 
 		//----------------------------------------------------------------------------------
+		// Begin drawing
 		BeginDrawing();
 
-		endgame = regular_mainframe(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT, mousex,
-				mousey);
+		// draw the top line
+		DrawLine(0, 0, FULLSCREEN_WIDTH, 1, toplinecolor);
 
+		// shooting animations
+		if (IsKeyDown(32)) {
+			DrawLine(0, FULLSCREEN_HEIGHT - 2, FULLSCREEN_WIDTH,
+					FULLSCREEN_HEIGHT - 2, BLUE);
+			DrawLine(0, FULLSCREEN_HEIGHT - 3, FULLSCREEN_WIDTH,
+					FULLSCREEN_HEIGHT - 3, BLUE);
+			DrawLine(0, FULLSCREEN_HEIGHT - 4, FULLSCREEN_WIDTH,
+					FULLSCREEN_HEIGHT - 4, BLUE);
+		}
+
+		// Create zones [blue zone and red zone]
+
+		// remove game name from screen and start the game.
+		if (actual_game_started == 0) {
+
+			gamename_window(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT, loops);
+
+			if (IsKeyDown(65) || IsKeyDown(68) || IsKeyDown(83)
+					|| IsKeyDown(87)) {
+				actual_game_started++;
+			}
+		}
+
+		//	display the background music at top
 		display_text_centered(actual_background_music_playing, 20, 0,
 				FULLSCREEN_WIDTH, "white");
 
-		gamename_window(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT, loops);
+		// draw soul screen
+		DrawTextureRec(only_soul, only_soul_frect, soul_position, BLUE);
 
-		DrawTextureRec(only_soul, only_soul_frect, (Vector2){500,300}, WHITE);
+		// draw middle moving layer
+		if (actual_game_started == 1) {
+			mid_section_lines(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT, (int[4] ) {
+							soul_position.x, soul_position.y, only_soul.width,
+							only_soul.height }, midlines_width,
+					mid_layers_xpos);
+
+			for (size_t x = 0; x < 3; ++x) {
+				if ((mid_layers_xpos[x] + midlines_width[x])
+						>= FULLSCREEN_WIDTH) {
+					turn[x] = 1;
+				}
+				if (mid_layers_xpos[x] <= 0) {
+					turn[x] = 0;
+				};
+				if (turn[x] == 1) {
+					mid_layers_xpos[x] -= mid_lines_move_speed[x];
+				} else if (turn[x] == 0) {
+					mid_layers_xpos[x] += mid_lines_move_speed[x];
+				}
+			}
+		}
+
+		// create the close buttons and close it when return value is 1
+		endgame = regular_mainframe(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT, mousex,
+				mousey);
+
+		// draw the bottom line
+		DrawLine(0, FULLSCREEN_HEIGHT - 1, FULLSCREEN_WIDTH,
+				FULLSCREEN_HEIGHT - 1,
+				bottomlinecolor);
 
 
+		// change top line color
+		if (soul_position.y<=0) {
+			toplinecolor = BLUE;
+		}else{
+			toplinecolor = RED;
+		}
+
+		// End drawing
 		EndDrawing();
 
+		// count loops
 		loops++;
 		//----------------------------------------------------------------------------------
 
 		if (endgame == 1) {
+			// break the loop
 			break;
 		};
 	}
 
+	// close audio device
 	CloseAudioDevice();
 
 	// De-Initialization
@@ -246,3 +364,9 @@ int main(int argc, char **argv[]) {
 
 	return 0;
 }
+
+/* todo
+ *
+ *
+ * */
+

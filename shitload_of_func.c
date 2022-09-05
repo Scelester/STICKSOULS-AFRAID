@@ -10,6 +10,7 @@ struct New_points
 };
 
 
+
 struct New_points calculate_new_points_in_circle(int center_x, int center_y,float px,float py,float angle)
 {
     float angle_to_radian = (3.14159265358979/180)*angle;
@@ -53,3 +54,9 @@ float * get_each_trangle_rotation(int center_x, int center_y, float p1x,float p2
 
     return new_points;
 }
+
+
+
+
+
+
