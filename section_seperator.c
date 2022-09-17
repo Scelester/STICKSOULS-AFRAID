@@ -79,17 +79,39 @@ int mid_section_lines(int screenwith, int screenheight, int soul_dimentions[4],i
 
 	for (size_t n = 0; n < number_of_layers; ++n) {
 		DrawRectangle(layers_x_pos[n], next_layer_ypos, midlines_width[n] , layers_thickness, PURPLE);
-		next_layer_ypos += layers_thickness + layers_toal_thikness/3;
+		next_layer_ypos += layers_thickness + layers_toal_thikness/number_of_layers;
 	}
 
 	return 0;
 }
 
-int user_selection_bottom_layer(int screenwidth) {
+int user_selection_bottom_layer(int screenwidth,int screenheight) {
 	// creates a bottom layer where people can choose ammo type
 	// has 9 rectangular box
 	// two for showing user heath, coin and selected ammo type
 	// other 7 for showing ammos
+
+	int total_number_of_layers = 9;
+	struct Color buttoncolor[] = {
+							GREEN,
+							GRAY,
+							BLUE,
+							WHITE,
+							RED,
+							PURPLE,
+							GREEN,
+							BLUE
+						};
+
+
+	for (size_t n = 0; n < total_number_of_layers; ++n) {
+		int xpos_cur_rect = n*(screenwidth/total_number_of_layers);
+		DrawRectangleLines(xpos_cur_rect, screenheight-30, screenwidth/total_number_of_layers, 30, buttoncolor[n]);
+
+
+		BoundingBox x = {1,2};
+	}
+
 	return 0;
 }
 

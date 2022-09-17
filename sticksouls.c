@@ -128,8 +128,12 @@ int main(int argc, char **argv[]) {
 		endload = regular_mainframe(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT, mousex,
 				mousey);
 
-		CreateButton("Host Game", 20, (int[2]){5,5}, WHITE, FULLSCREEN_WIDTH/6, FULLSCREEN_HEIGHT - 150, "reactangle", 30, 20, BLUE);
-		CreateButton("Join Game", 20, (int[2]){5,5}, WHITE, FULLSCREEN_WIDTH-400, FULLSCREEN_HEIGHT - 150, "reactangle", 30, 20, RED);
+		CreateButton("Host Game", 20, (int[2] ) { 5, 5 }, WHITE,
+				FULLSCREEN_WIDTH / 6, FULLSCREEN_HEIGHT - 150, "reactangle", 30,
+				20, BLUE);
+		CreateButton("Join Game", 20, (int[2] ) { 5, 5 }, WHITE,
+				FULLSCREEN_WIDTH - 400, FULLSCREEN_HEIGHT - 150, "reactangle",
+				30, 20, RED);
 
 		EndDrawing();
 
@@ -212,7 +216,6 @@ int main(int argc, char **argv[]) {
 
 	int turn[3] = { 0, 0, 0 };
 
-
 	// top and bottom lines colors
 	Color toplinecolor = RED;
 	Color bottomlinecolor = BLUE;
@@ -237,7 +240,7 @@ int main(int argc, char **argv[]) {
 
 		if (soul_moving_count >= (60 / frame_speed_for_soul)) {
 			if (IsKeyDown(87)) {
-				if (soul_position.y>-20){
+				if (soul_position.y > -20) {
 					soul_position.y -= 2;
 				}
 
@@ -268,8 +271,14 @@ int main(int argc, char **argv[]) {
 		// Begin drawing
 		BeginDrawing();
 
+		// draw the bottom line
+		DrawLine(0, FULLSCREEN_HEIGHT - 1, FULLSCREEN_WIDTH,
+				FULLSCREEN_HEIGHT - 1, bottomlinecolor);
+
 		// draw the top line
 		DrawLine(0, 0, FULLSCREEN_WIDTH, 1, toplinecolor);
+
+		user_selection_bottom_layer(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT);
 
 		// shooting animations
 		if (IsKeyDown(32)) {
@@ -328,16 +337,10 @@ int main(int argc, char **argv[]) {
 		endgame = regular_mainframe(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT, mousex,
 				mousey);
 
-		// draw the bottom line
-		DrawLine(0, FULLSCREEN_HEIGHT - 1, FULLSCREEN_WIDTH,
-				FULLSCREEN_HEIGHT - 1,
-				bottomlinecolor);
-
-
 		// change top line color
-		if (soul_position.y<=0) {
+		if (soul_position.y <= 0) {
 			toplinecolor = BLUE;
-		}else{
+		} else {
 			toplinecolor = RED;
 		}
 
