@@ -6,9 +6,9 @@
 #include <string.h>
 #include <time.h>
 
-#include "basic_frame.c"
-#include "section_seperator.c"
-#include "shitload_of_func.c"
+#include "basic_frame.h"
+#include "section_seperator.h"
+#include "shitload_of_func.h"
 
 char background_musics[10][100];
 int dirlooper = 0;
@@ -275,8 +275,17 @@ int main(int argc, char **argv[]) {
 		DrawLine(0, FULLSCREEN_HEIGHT - 1, FULLSCREEN_WIDTH,
 				FULLSCREEN_HEIGHT - 1, bottomlinecolor);
 
+		// own sidelines
+		DrawLine(1,FULLSCREEN_HEIGHT/2,1,FULLSCREEN_HEIGHT,bottomlinecolor);
+		DrawLine(FULLSCREEN_WIDTH-1,FULLSCREEN_HEIGHT/2,FULLSCREEN_WIDTH-1,FULLSCREEN_HEIGHT,bottomlinecolor);
+
+		// opponent sidelines
+		DrawLine(1,0,1,FULLSCREEN_HEIGHT/2,toplinecolor);
+		DrawLine(FULLSCREEN_WIDTH-1,0,FULLSCREEN_WIDTH-1,FULLSCREEN_HEIGHT/2,toplinecolor);
+
 		// draw the top line
 		DrawLine(0, 0, FULLSCREEN_WIDTH, 1, toplinecolor);
+
 
 		user_selection_bottom_layer(FULLSCREEN_WIDTH, FULLSCREEN_HEIGHT);
 
@@ -288,6 +297,10 @@ int main(int argc, char **argv[]) {
 					FULLSCREEN_HEIGHT - 3, BLUE);
 			DrawLine(0, FULLSCREEN_HEIGHT - 4, FULLSCREEN_WIDTH,
 					FULLSCREEN_HEIGHT - 4, BLUE);
+			DrawLine(2,FULLSCREEN_HEIGHT/2,2,FULLSCREEN_HEIGHT,bottomlinecolor);
+			DrawLine(FULLSCREEN_WIDTH-2,FULLSCREEN_HEIGHT/2,FULLSCREEN_WIDTH-2,FULLSCREEN_HEIGHT,bottomlinecolor);
+
+
 		}
 
 		// Create zones [blue zone and red zone]
