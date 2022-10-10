@@ -5,39 +5,42 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
-#define PORT 1555
+#define PORT 5555
+#define Max 1024
 
-void main()
-{
- int sockfd;
- struct sockaddr_in serverAddr;
+int main(int argc, char **argv) {
+//	defining file descripter
+	int server_fd, client_fd;
 
- int newSocket;
- struct sockaddr_in newAddr;
+	struct sockaddr_in server_addr, client_addr;
 
- socklen_t addr_size;
- char buf[1024];
+	socklen_t addr_size;
 
- sockfd=socket(PF_INET,SOCK_STREAM,0);
- printf("Server socket Created Successfully...\n");
- memset(&serverAddr,'\0',sizeof(serverAddr));
+	char buffer[Max];
 
+// server socket setting
+	server_fd = socket(AF_INET, SOCK_STREAM, 0);
 
- serverAddr.sin_family=AF_INET;
- serverAddr.sin_port=htons(PORT);
- serverAddr.sin_addr.s_addr=inet_addr("127.0.0.1");
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(PORT);
+	server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 
- bind(sockfd,(struct sockaddr*)&serverAddr,sizeof(serverAddr));
- printf("Bind to Port Number %d\n",4455);
+	bind(server_fd, (struct sockaddr*) &server_addr, sizeof(server_addr));
 
- listen(sockfd,6);
- printf("Listening...\n");
+	listen(server_fd, 5);
 
- newSocket=accept(sockfd,(struct sockaddr*)&newAddr,&addr_size);
+	printf("[+]LISTNING ON PORT : %d\n", PORT);
 
- strcpy(buf,"Hello");
- send(newSocket,buf,strlen(buf),0);
+	client_fd = accept(server_fd, (struct sockaddr*) &client_addr, &addr_size);
 
- printf("Closing Connection...\n");
+	if (client_fd != -1) {
+		printf("[+]CLIENT CONNECTED\n");
+		strcpy(buffer, "This is the message");
+		send(client_fd, buffer, strlen(buffer), 0);
+	}
+
+	return 0;
+
 }
